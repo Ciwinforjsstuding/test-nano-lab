@@ -1,6 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+export interface Message {
+    readonly id: number;
+    isMessageBot: boolean;
+    text: string;
+    time: Date;
+}
+export interface InitialState {
+    messages: Message[];
+}
+
+const initialState: InitialState = {
     messages: [
         {
             id: 1,
