@@ -1,0 +1,24 @@
+.message {
+    display: flex;
+    flex-direction: column;
+    background: #00346b8e;
+    padding: 5px 10px;
+    width: 20%;
+    min-width: 200px;
+    margin: 10px 5px;
+    border-radius: 5px;
+    &-bot {
+        align-self: flex-start;
+    }
+    &-user {
+        align-self: flex-end;
+    }
+    &__text {
+        color: #fff;
+        word-break: break-all;
+    }
+    &__time {
+        text-align: right;
+        color: rgba(255, 255, 255, 0.33);
+    }
+}

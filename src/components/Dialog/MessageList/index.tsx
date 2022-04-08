@@ -1,14 +1,18 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import { Message } from "../../../store/slices/dialogSlice";
+
+import { TextMessage } from "../Message";
+import "./message-list.scss";
 
 export const MessageList = () => {
-    const {messages} = useSelector((state: RootState) => state.dialog)
+    const { choosedChat } = useSelector((state: RootState) => state.dialog);
     return (
         <div className="messages-list">
-            {messages.map(message => (
-                
+            {choosedChat?.messages.map((message: Message) => (
+                <TextMessage key={message.id} message={message} />
             ))}
         </div>
-    )
-}
+    );
+};

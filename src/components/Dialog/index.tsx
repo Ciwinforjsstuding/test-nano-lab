@@ -1,20 +1,30 @@
 import React, { useState, MouseEvent } from "react";
 import { useAction } from "../../hooks/useAction";
+import { MessageList } from "./MessageList";
+import "./dialog.scss";
 
 export const Dialog = () => {
     const [textMessage, setTextMessage] = useState("");
     const { sendMessage } = useAction();
+
     const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTextMessage(event.target.value);
     };
+
     const onClickHandler = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        sendMessage(textMessage);
+        sendMessage({
+            id: new Date().getTime(),
+            isMessageBot: false,
+            text: textMessage,
+            time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+        });
+        setTextMessage("");
     };
 
     return (
         <form className="dialog">
-            {/* тут у нас будут сообщения */}
+            <MessageList />
             <div className="dialog-footer">
                 <input
                     value={textMessage}
@@ -22,9 +32,14 @@ export const Dialog = () => {
                     type="text"
                     className="dialog-footer__input"
                 />
-                <button onClick={onClickHandler} className="dialog-footer__btn">
-                    Отправить
-                </button>
+                {textMessage && (
+                    <button
+                        onClick={onClickHandler}
+                        className="dialog-footer__btn"
+                    >
+                        Отправить
+                    </button>
+                )}
             </div>
         </form>
     );

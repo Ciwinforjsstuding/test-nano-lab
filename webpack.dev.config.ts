@@ -1,15 +1,15 @@
 const { resolve, join } = require("path");
 const { Configuration, HotModuleReplacementPlugin } = require("webpack");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 
 const config: typeof Configuration = {
     mode: "development",
     output: {
         publicPath: "/",
-        path: resolve(__dirname, './dist'),
-        filename: '[name].bundle.js',
+        path: resolve(__dirname, "./dist"),
+        filename: "[name].bundle.js",
     },
     entry: {
         main: resolve(__dirname, "./src/index.tsx"),
@@ -32,13 +32,13 @@ const config: typeof Configuration = {
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: [
-                    "style-loader",
-                    "css-loader",
-                    "sass-loader",
-                ],
+                use: ["style-loader", "css-loader", "sass-loader"],
             },
-        ]
+            {
+                test: /\.svg$/,
+                use: ["@svgr/webpack"],
+            },
+        ],
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
@@ -46,15 +46,15 @@ const config: typeof Configuration = {
     plugins: [
         new HtmlWebpackPlugin({
             template: resolve(__dirname, "./src/index.html"),
-            filename: "index.html"
+            filename: "index.html",
         }),
         new HotModuleReplacementPlugin(),
         new ForkTsCheckerWebpackPlugin({
-            async: false
+            async: false,
         }),
         new ESLintPlugin({
             extensions: [".tsx", ".ts", ".js"],
-        })
+        }),
     ],
     devtool: "inline-source-map",
     devServer: {
@@ -62,8 +62,8 @@ const config: typeof Configuration = {
         historyApiFallback: true,
         port: 4000,
         open: true,
-        hot: true
+        hot: true,
     },
-}
+};
 
 module.exports = config;
