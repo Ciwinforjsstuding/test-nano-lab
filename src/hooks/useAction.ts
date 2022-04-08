@@ -8,15 +8,24 @@ import {
     initialLocaStorage,
 } from "../store/slices/dialogSlice";
 
+import {
+    initChat,
+    botGreeting,
+    sendMessageToBot,
+} from "../store/slices/dialogSlice";
+
 export const useAction = () => {
     const dispatch = useDispatch();
     return bindActionCreators(
         {
+            initChat,
             resetDialog,
             sendMessage,
-            initialLocaStorage,
-            saveDiffInChat,
             chooseChat,
+            botGreeting,
+            saveDiffInChat,
+            sendMessageToBot,
+            initialLocaStorage,
         },
         dispatch
     );
