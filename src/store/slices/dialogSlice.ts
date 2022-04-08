@@ -1,70 +1,104 @@
 import { createSlice } from "@reduxjs/toolkit";
+// import { current } from "@reduxjs/toolkit";
 
 export interface Message {
     readonly id: number;
     isMessageBot: boolean;
     text: string;
-    time: Date;
+    time: string;
+}
+export interface Chat {
+    titleChat: string;
+    messages: Message[];
+}
+interface SendMessageAction {
+    type: string;
+    payload: Message;
+}
+
+interface DiffsChatAction {
+    type: string;
+    payload: Chat;
+}
+
+interface ChooseChatAction {
+    type: string;
+    payload: string;
 }
 export interface InitialState {
-    messages: Message[];
+    chats: Chat[];
+    choosedChat: undefined | Chat;
 }
 
 const initialState: InitialState = {
-    messages: [
+    chats: [
         {
-            id: 1,
-            isMessageBot: false,
-            text: "Test message-1",
-            time: new Date(),
+            titleChat: "Чат с ботом",
+            messages: [
+                {
+                    id: 1,
+                    isMessageBot: false,
+                    text: "Test to bot",
+                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+                },
+            ],
         },
         {
-            id: 2,
-            isMessageBot: false,
-            text: "Test message-2",
-            time: new Date(),
-        },
-        {
-            id: 3,
-            isMessageBot: false,
-            text: "Test message-3",
-            time: new Date(),
-        },
-        {
-            id: 4,
-            isMessageBot: false,
-            text: "Test message-4",
-            time: new Date(),
-        },
-        {
-            id: 5,
-            isMessageBot: false,
-            text: "Test message-5",
-            time: new Date(),
+            titleChat: "Тестовый чат",
+            messages: [
+                {
+                    id: 1,
+                    isMessageBot: false,
+                    text: "Test message",
+                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+                },
+            ],
         },
     ],
+    choosedChat: undefined,
 };
 
 export const dialogSlice = createSlice({
     name: "dialog",
     initialState,
     reducers: {
-        sendMessage: (state, action) => {
-            state.messages.push(action.payload);
+        chooseChat: (state, action: ChooseChatAction) => {
+            state.choosedChat = state.chats.find(
+                chat => chat.titleChat === action.payload
+            );
         },
-        resetDialog: state => {
-            state.messages = [];
+        saveDiffInChat: (state, action: DiffsChatAction) => {
+            const { chats, choosedChat } = state;
+            if (choosedChat) {
+                const saveDiffs = chats.map(chat => {
+                    if (chat.titleChat === choosedChat?.titleChat) {
+                        return action.payload;
+                    }
+                    return chat;
+                });
+                return {
+                    chats: [...(saveDiffs ? saveDiffs : state.chats)],
+                    choosedChat,
+                };
+            }
+        },
+        sendMessage: (state, action: SendMessageAction) => {
+            state.choosedChat?.messages.push(action.payload);
+        },
+        resetDialog: () => {
+            localStorage.clear();
+        },
+        initialLocaStorage: (_, action) => {
+            return action.payload;
         },
     },
 });
 
-export const { sendMessage, resetDialog } = dialogSlice.actions;
+export const {
+    sendMessage,
+    resetDialog,
+    chooseChat,
+    initialLocaStorage,
+    saveDiffInChat,
+} = dialogSlice.actions;
 export default dialogSlice.reducer;
-
-// fetch('https://biz.nanosemantics.ru/api/2.1/json/Chat', {
-//     method: 'POST',
-//     body: '772c9859-4dd3-4a0d-b87d-d76b9f43cfa4',
-// }).then(res => {
-//     console.log(res);
-//     res.json();
-// }).then(data => console.log(data));

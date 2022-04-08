@@ -1,6 +1,12 @@
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { resetDialog, sendMessage } from "../store/slices/dialogSlice";
+import {
+    resetDialog,
+    sendMessage,
+    chooseChat,
+    saveDiffInChat,
+    initialLocaStorage,
+} from "../store/slices/dialogSlice";
 
 export const useAction = () => {
     const dispatch = useDispatch();
@@ -8,6 +14,9 @@ export const useAction = () => {
         {
             resetDialog,
             sendMessage,
+            initialLocaStorage,
+            saveDiffInChat,
+            chooseChat,
         },
         dispatch
     );
