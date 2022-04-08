@@ -12,6 +12,9 @@
             display: block;
         }
     }
+    &_selected {
+        background-color: rgba(5, 65, 130, 0.673);
+    }
     &__title {
         color: #fff;
     }
