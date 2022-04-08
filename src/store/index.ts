@@ -1,6 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import dialogSlice from './slices/dialogSlice';
+import dialogSlice from "./slices/dialogSlice";
+import { saveToLocalStorage } from "./utils";
 
 export const store = configureStore({
     reducer: {
@@ -8,5 +9,9 @@ export const store = configureStore({
     },
 });
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+store.subscribe(() => {
+    saveToLocalStorage(store);
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
