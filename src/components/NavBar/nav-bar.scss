@@ -1,14 +1,14 @@
 .app-nav-bar {
     width: 15%;
-    background: rgba(5, 65, 130, 0.8);
+    background: var(--bg-navbar);
     margin: 0 2px 0 0;
     padding: 15px 0 0 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     &__title {
-        border-bottom: 1px solid #fff;
-        color: #fff;
+        border-bottom: 1px solid var(--white);
+        color: var(--white);
         width: 100%;
         display: block;
         padding: 10px 0 10px 5px;

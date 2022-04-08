@@ -1,7 +1,7 @@
 .message {
     display: flex;
     flex-direction: column;
-    background: #00346b8e;
+    background: var(--bg-message);
     padding: 5px 10px;
     width: 20%;
     min-width: 200px;
@@ -14,11 +14,11 @@
         align-self: flex-end;
     }
     &__text {
-        color: #fff;
+        color: var(--white);
         word-break: break-all;
     }
     &__time {
         text-align: right;
-        color: rgba(255, 255, 255, 0.33);
+        color: var(--color-message-time);
     }
 }

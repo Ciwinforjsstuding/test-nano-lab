@@ -1,6 +1,7 @@
 .dialog {
     background: #00152c;
     width: 85%;
+    overflow-x: auto;
     &-footer {
         width: 85%;
         bottom: 0;
@@ -18,14 +19,13 @@
             right: 0px;
             height: 100%;
             padding: 0px 10px;
-            background-color: #0028a299;
+            background-color: var(--bg-btn);
             border: 0px;
             color: #fff;
             cursor: pointer;
             &:active {
-                background-color: #0028a27f;
+                background-color: var(--bg-btn-input-active);
             }
         }
     }
 }
-// https://biz.nanosemantics.ru/api/bat/nkd/json/Chat.

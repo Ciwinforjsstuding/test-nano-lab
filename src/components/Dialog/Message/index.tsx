@@ -1,5 +1,6 @@
 import React from "react";
-import { Message } from "../../../store/slices/dialogSlice";
+
+import { Message } from "../../../store/slices/type";
 
 import "./message.scss";
 interface Props {

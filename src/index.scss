@@ -9,4 +9,15 @@
 
 :root {
     background: rgb(21, 21, 21);
+
+    --white: #fff;
+    --bg-chat-item-hover: rgba(5, 65, 130, 0.673);
+    --bg-chat-item-selected: rgba(5, 65, 130, 0.552);
+    --bg-btn: #0028a299;
+    --bg-btn-navbar-active: #0028a2c8;
+    --bg-btn-input-active: #0028a27f;
+    --bg-navbar: rgba(5, 65, 130, 0.8);
+    --bg-message: #00346b8e;
+
+    --color-message-time: rgba(255, 255, 255, 0.33);
 }

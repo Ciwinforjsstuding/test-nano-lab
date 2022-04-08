@@ -1,36 +1,41 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { MouseEvent } from "react";
 
-import { useAction } from "../../../hooks/useAction";
-import { RootState } from "../../../store";
+import { useTypedSelector, useAction } from "../../../hooks";
 
 import "./chat-item.scss";
 
-interface Props {
-    title: string;
-}
-
-export const ChatItem = ({ title }: Props) => {
+export const ChatItem = () => {
     const { chooseChat, saveDiffInChat, resetDialog } = useAction();
-    const { choosedChat } = useSelector((state: RootState) => state.dialog);
+    const { choosedChat, chat } = useTypedSelector(state => state.dialog);
 
     const chatItemHandler = () => {
-        saveDiffInChat(choosedChat!);
-        chooseChat(title);
+        if (choosedChat) {
+            saveDiffInChat(choosedChat);
+        }
+        chooseChat();
     };
 
+    const resetChatItemHandler = (event: MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        resetDialog();
+    };
     const isSelectedChatItem =
-        title === choosedChat?.titleChat ? "chat-item_selected" : "";
+        chat.titleChat === choosedChat?.titleChat ? "chat-item_selected" : "";
 
     return (
-        <div
-            onClick={chatItemHandler}
-            className={`chat-item ${isSelectedChatItem}`}
-        >
-            <span className="chat-item__title">{title}</span>
-            <button onClick={resetDialog} className="chat-item__btn">
-                Очистить
-            </button>
+        <div className="chat-list">
+            <div
+                onClick={chatItemHandler}
+                className={`chat-item ${isSelectedChatItem}`}
+            >
+                <span className="chat-item__title">{chat.titleChat}</span>
+                <button
+                    onClick={resetChatItemHandler}
+                    className="chat-item__btn"
+                >
+                    Очистить
+                </button>
+            </div>
         </div>
     );
 };

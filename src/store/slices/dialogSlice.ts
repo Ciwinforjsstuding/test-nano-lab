@@ -1,60 +1,84 @@
-import { createSlice } from "@reduxjs/toolkit";
-// import { current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getTime, getUrl } from "../utils";
+import {
+    ArgSendMessageToBot,
+    ChatMethods,
+    codesBot,
+    SaveDiffsChatAction,
+    InitialState,
+    SendMessageAction,
+} from "./type";
 
-export interface Message {
-    readonly id: number;
-    isMessageBot: boolean;
-    text: string;
-    time: string;
-}
-export interface Chat {
-    titleChat: string;
-    messages: Message[];
-}
-interface SendMessageAction {
-    type: string;
-    payload: Message;
-}
+export const initChat = createAsyncThunk("dialog/initChat", async () => {
+    try {
+        const respons = await fetch(getUrl(ChatMethods.init), {
+            method: "POST",
+            body: JSON.stringify({
+                uuid: codesBot.uuid,
+            }),
+        });
+        const result = await respons.json();
+        return result.result.cuid;
+    } catch (error) {
+        console.log(error);
+    }
+});
 
-interface DiffsChatAction {
-    type: string;
-    payload: Chat;
-}
+export const botGreeting = createAsyncThunk(
+    "dialog/botGreeting",
+    async (cuid: string) => {
+        try {
+            const respons = await fetch(getUrl(ChatMethods.event), {
+                method: "POST",
+                body: JSON.stringify({
+                    cuid,
+                    euid: codesBot.greeting,
+                }),
+            });
+            const result = await respons.json();
+            return {
+                id: result.result.id,
+                isMessageBot: true,
+                text: result.result.text.value,
+                time: getTime(),
+            };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
 
-interface ChooseChatAction {
-    type: string;
-    payload: string;
-}
-export interface InitialState {
-    chats: Chat[];
-    choosedChat: undefined | Chat;
-}
+export const sendMessageToBot = createAsyncThunk(
+    "dialog/requestToBot",
+    async ({ cuid, text }: ArgSendMessageToBot) => {
+        try {
+            const respons = await fetch(getUrl(ChatMethods.request), {
+                method: "POST",
+                body: JSON.stringify({
+                    cuid,
+                    text,
+                }),
+            });
+            const result = await respons.json();
+            return {
+                id: result.result.id,
+                isMessageBot: true,
+                text: result.result.text.value,
+                time: getTime(),
+            };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
 
 const initialState: InitialState = {
-    chats: [
-        {
-            titleChat: "Чат с ботом",
-            messages: [
-                {
-                    id: 1,
-                    isMessageBot: false,
-                    text: "Test to bot",
-                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-                },
-            ],
-        },
-        {
-            titleChat: "Тестовый чат",
-            messages: [
-                {
-                    id: 1,
-                    isMessageBot: false,
-                    text: "Test message",
-                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-                },
-            ],
-        },
-    ],
+    chat: {
+        titleChat: "Чат с ботом",
+        cuid: "",
+        isBotGreeting: false,
+        messages: [],
+    },
     choosedChat: undefined,
 };
 
@@ -62,35 +86,36 @@ export const dialogSlice = createSlice({
     name: "dialog",
     initialState,
     reducers: {
-        chooseChat: (state, action: ChooseChatAction) => {
-            state.choosedChat = state.chats.find(
-                chat => chat.titleChat === action.payload
-            );
+        chooseChat: state => {
+            state.choosedChat = state.chat;
         },
-        saveDiffInChat: (state, action: DiffsChatAction) => {
-            const { chats, choosedChat } = state;
-            if (choosedChat) {
-                const saveDiffs = chats.map(chat => {
-                    if (chat.titleChat === choosedChat?.titleChat) {
-                        return action.payload;
-                    }
-                    return chat;
-                });
-                return {
-                    chats: [...(saveDiffs ? saveDiffs : state.chats)],
-                    choosedChat,
-                };
-            }
+        saveDiffInChat: (state, action: SaveDiffsChatAction) => {
+            state.chat = action.payload;
         },
         sendMessage: (state, action: SendMessageAction) => {
             state.choosedChat?.messages.push(action.payload);
         },
         resetDialog: () => {
             localStorage.clear();
+            return initialState;
         },
         initialLocaStorage: (_, action) => {
             return action.payload;
         },
+    },
+    extraReducers: builder => {
+        builder.addCase(initChat.fulfilled, (state, action) => {
+            state.choosedChat!.cuid = action.payload;
+        });
+
+        builder.addCase(botGreeting.fulfilled, (state, action) => {
+            state.choosedChat?.messages.push(action.payload!);
+            state.choosedChat!.isBotGreeting = true;
+        });
+
+        builder.addCase(sendMessageToBot.fulfilled, (state, action) => {
+            state.choosedChat?.messages.push(action.payload!);
+        });
     },
 });
 
