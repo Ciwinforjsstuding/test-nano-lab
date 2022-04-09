@@ -3,6 +3,7 @@ import { useTypedSelector, useAction } from "../../hooks";
 import { getChatsFromLocalStorage } from "../../store/utils";
 import { Dialog } from "../Dialog";
 import { NavBar } from "../NavBar";
+import { UnselectedСhatItem } from "../UnselectedСhatItem";
 
 import "./app.scss";
 
@@ -20,6 +21,7 @@ export const App = () => {
         <div className="app">
             <NavBar />
             {choosedChat && <Dialog />}
+            {!choosedChat && <UnselectedСhatItem />}
         </div>
     );
 };
