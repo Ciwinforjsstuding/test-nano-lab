@@ -1,11 +1,11 @@
 import { Store } from "@reduxjs/toolkit";
 import { ChatMethods } from "./slices/type";
 
-export const getChatsFromLocalStorage = () => {
+export const getStoreFromLocalStorage = () => {
     try {
-        const chats = localStorage.getItem("chats");
-        if (chats) {
-            return JSON.parse(chats);
+        const store = localStorage.getItem("store");
+        if (store) {
+            return JSON.parse(store);
         }
     } catch (error) {
         console.log(error);
@@ -13,7 +13,7 @@ export const getChatsFromLocalStorage = () => {
 };
 
 export const saveToLocalStorage = (store: Store) => {
-    localStorage.setItem("chats", JSON.stringify(store.getState().dialog));
+    localStorage.setItem("store", JSON.stringify(store.getState().dialog));
 };
 
 export const getUrl = (method: ChatMethods) =>

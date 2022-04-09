@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTypedSelector, useAction } from "../../hooks";
-import { getChatsFromLocalStorage } from "../../store/utils";
+import { getStoreFromLocalStorage } from "../../store/utils";
 import { Dialog } from "../Dialog";
 import { NavBar } from "../NavBar";
 import { UnselectedСhatItem } from "../UnselectedСhatItem";
@@ -12,8 +12,8 @@ export const App = () => {
     const { choosedChat } = useTypedSelector(state => state.dialog);
 
     useEffect(() => {
-        const chats = getChatsFromLocalStorage();
-        initialLocaStorage(chats);
+        const store = getStoreFromLocalStorage();
+        initialLocaStorage(store);
         // eslint-disable-next-line
     }, []);
 
